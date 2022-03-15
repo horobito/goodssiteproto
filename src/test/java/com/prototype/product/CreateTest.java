@@ -78,7 +78,21 @@ public class CreateTest {
 
         assertThrows(IllegalArgumentException.class,
                 ()->sut.create(productName, productPrice, stock, isStockInfinite));
+    }
 
+    @DisplayName("Create Test 4. Abnormal Condition - stock range error ")
+    @Test
+    public void test4() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = -1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 2L;
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.create(productName, productPrice, stock, isStockInfinite));
     }
 
 }
