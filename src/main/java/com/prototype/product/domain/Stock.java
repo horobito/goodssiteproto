@@ -1,15 +1,13 @@
 package com.prototype.product.domain;
 
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
-@Getter(AccessLevel.PACKAGE)
-
+@Getter
 @NoArgsConstructor
 public class Stock {
 

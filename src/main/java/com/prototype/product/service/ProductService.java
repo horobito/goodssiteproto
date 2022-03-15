@@ -11,7 +11,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
 
     // manager 영역에서 사용할 것들
@@ -23,7 +23,9 @@ public class ProductService {
                 SellerId.create(userid), Stock.create(stock, isStockInfinite)
         );
 
-        return getProductDto(productRepository.save(newProduct));
+        Product saved = productRepository.save(newProduct);
+
+        return getProductDto(saved);
     }
 
     public ProductDto productContext(Long productId, ProductStrategy productStrategy){
