@@ -2,7 +2,6 @@ package com.prototype.product;
 
 
 import com.prototype.product.domain.*;
-import com.prototype.product.service.ProductDto;
 import com.prototype.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -64,6 +62,22 @@ public class CreateTest {
 
         assertThrows(IllegalArgumentException.class,
                 ()->sut.create(productNameOver, productPrice, stock, isStockInfinite));
+
+    }
+
+    @DisplayName("Create Test 3. Abnormal Condition - price range error ")
+    @Test
+    public void test3() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = -1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 2L;
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.create(productName, productPrice, stock, isStockInfinite));
 
     }
 
