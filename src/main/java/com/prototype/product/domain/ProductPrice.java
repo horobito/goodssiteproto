@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @NoArgsConstructor
-@Getter(AccessLevel.PACKAGE)
+@Getter
 public class ProductPrice {
 
     private int productPrice;
