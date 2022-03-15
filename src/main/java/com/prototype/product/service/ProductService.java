@@ -20,7 +20,7 @@ public class ProductService {
         Long userid = 1L;
         Product newProduct = Product.create(
                 ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userid), Stock.create(stock)
+                SellerId.create(userid), Stock.create(stock, isStockInfinite)
         );
 
         return getProductDto(productRepository.save(newProduct));

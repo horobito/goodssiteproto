@@ -59,7 +59,7 @@ public class Product {
 
     public void changeStock(int changedStock) {
         if (!this.stock.isStockInfinite()) {
-            this.stock = Stock.create(changedStock);
+            this.stock = Stock.create(changedStock, this.stock.isStockInfinite());
         }
     }
 
@@ -92,13 +92,13 @@ public class Product {
     }
 
     public void setStockInfinite() {
-        Stock newStock = Stock.create(this.stock.getStock());
+        Stock newStock = Stock.create(this.stock.getRemainingStocks());
         newStock.setStockInfinite();
         this.stock = newStock;
     }
 
     public void setStockFinite() {
-        Stock newStock = Stock.create(this.stock.getStock());
+        Stock newStock = Stock.create(this.stock.getRemainingStocks());
         newStock.setStockFinite();
         this.stock = newStock;
     }
@@ -121,7 +121,7 @@ public class Product {
     }
 
     public int getStock() {
-        return this.stock.getStock();
+        return this.stock.getRemainingStocks();
     }
 
     public boolean isStockInfinite() {
