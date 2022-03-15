@@ -23,97 +23,66 @@ public class ProductService {
                 SellerId.create(userid), Stock.create(stock)
         );
 
-        return getProductDto(productRepository.saveAndFlush(newProduct));
+        return getProductDto(productRepository.save(newProduct));
+    }
+
+    public ProductDto productContext(Long productId, ProductStrategy productStrategy){
+        Optional<Product> product = getProduct(productId);
+        if (product.isPresent()) {
+            checkUserValidation(product.get().getSellerId());
+            productStrategy.executeStrategy(product.get());
+            product.get().delete();
+            return getProductDto(productRepository.save(product.get()));
+        }
+        throw new IllegalArgumentException();
     }
 
     public ProductDto delete(Long productId) {
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            product.get().delete();
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        ProductStrategy productDeleteStrategy = Product::delete;
+        return productContext(productId, productDeleteStrategy);
     }
 
     public ProductDto revive(Long productId){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            product.get().revive();
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        ProductStrategy productReviveStrategy = Product::revive;
+        return productContext(productId, productReviveStrategy);
     }
-
-
 
     public ProductDto changeStock(Long productId, int amountOfChange){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            product.get().changeStock(product.get().getStock()+amountOfChange);
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        ProductStrategy productChangeStockStrategy = product -> product.changeStock(product.getStock()+amountOfChange);
+        return productContext(productId, productChangeStockStrategy);
     }
 
-
     public ProductDto changeProductName(Long productId, String newProductName){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            product.get().changeProductName(newProductName);
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        ProductStrategy productRenameStrategy = product -> product.changeProductName(newProductName);
+        return productContext(productId, productRenameStrategy);
     }
 
     public ProductDto changeProductPrice(Long productId, int productPrice){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            product.get().changeProductPrice(productPrice);
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        ProductStrategy productPriceChangeStrategy = product -> product.changeProductPrice(productPrice);
+        return productContext(productId, productPriceChangeStrategy);
     }
 
     public ProductDto setSoldOutState(Long productId, boolean isSoldOut){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
+        ProductStrategy productSetSoldOutStateStrategy = product -> {
             if (isSoldOut){
-                product.get().setSoldOut();
+                product.setSoldOut();
             }else {
-                product.get().setUnSoldOut();
+                product.setUnSoldOut();
             }
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        };
+        return productContext(productId, productSetSoldOutStateStrategy);
     }
 
     public ProductDto setStockInfiniteState(Long productId, boolean isStockInfinite){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
+        ProductStrategy productSetStockInfiniteStateStrategy = product -> {
             if (isStockInfinite){
-                product.get().setStockInfinite();
+                product.setStockInfinite();
             }else {
-                product.get().setStockFinite();
+                product.setStockFinite();
             }
-            getProductDto(productRepository.saveAndFlush(product.get()));
-        }
-        throw new IllegalArgumentException();
+        };
+        return productContext(productId, productSetStockInfiniteStateStrategy);
     }
-
-
-
-
-
-
-    // manager 영역에서 사용할 것들
-
 
 
     private Optional<Product> getProduct(Long productId) {
