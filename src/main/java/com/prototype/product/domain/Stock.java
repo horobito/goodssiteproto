@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Access;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -14,18 +13,28 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 public class Stock {
 
-    private int stock;
+    private int remainingStocks;
 
     private boolean isStockInfinite;
 
-     private Stock(int stock) {
-        this.stock = stock;
+     private Stock(int stock, boolean isStockInfinite) {
+        this.remainingStocks = stock;
+        this.isStockInfinite=isStockInfinite;
+    }
+
+    private Stock(int stock) {
+        this.remainingStocks = stock;
         this.isStockInfinite=false;
     }
 
     public static Stock create(int stock){
+        checkStockValidation(stock);
+        return new Stock(stock);
+    }
+
+    public static Stock create(int stock, boolean isStockInfinite){
          checkStockValidation(stock);
-         return new Stock(stock);
+         return new Stock(stock, isStockInfinite);
     }
 
     private static void checkStockValidation(int stock){
