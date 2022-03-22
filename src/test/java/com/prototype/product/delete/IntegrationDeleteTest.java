@@ -1,4 +1,4 @@
-package com.prototype.product;
+package com.prototype.product.delete;
 
 
 import com.prototype.product.domain.ProductRepository;
@@ -14,15 +14,15 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class IntegrationCreateTest {
+public class IntegrationDeleteTest {
 
     @Autowired
     ProductRepository productRepository;
 
 
-    @DisplayName("Integration Create Test")
+    @DisplayName("Integration Delete Test")
     @Test
-    public void test1(){
+    public void test1() {
         ProductService sut = new ProductService(productRepository);
 
         String productName = "product1";
@@ -41,20 +41,22 @@ public class IntegrationCreateTest {
                 stock,
                 false,
                 false,
-                false
+                true
 
         );
 
-        ProductDto created= sut.create(productName, productPrice, stock, isStockInfinite);
 
-        assertEquals(expected.getProductId(), created.getProductId());
-        assertEquals(expected.getProductName(), created.getProductName());
-        assertEquals(expected.getProductPrice(), created.getProductPrice());
-        assertEquals(expected.getSellerId(), created.getSellerId());
-        assertEquals(expected.getStock(), created.getStock());
-        assertEquals(expected.isStockInfinite(), created.isStockInfinite());
-        assertEquals(expected.isSoldOut(), created.isSoldOut());
-        assertEquals(expected.isDeleted(), created.isDeleted());
+
+        ProductDto deleted = sut.delete(expectedProductId);
+
+        assertEquals(expected.getProductId(), deleted.getProductId());
+        assertEquals(expected.getProductName(), deleted.getProductName());
+        assertEquals(expected.getProductPrice(), deleted.getProductPrice());
+        assertEquals(expected.getSellerId(), deleted.getSellerId());
+        assertEquals(expected.getStock(), deleted.getStock());
+        assertEquals(expected.isStockInfinite(), deleted.isStockInfinite());
+        assertEquals(expected.isSoldOut(), deleted.isSoldOut());
+        assertEquals(expected.isDeleted(), deleted.isDeleted());
 
     }
 }

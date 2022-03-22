@@ -1,6 +1,7 @@
-package com.prototype.product;
+package com.prototype.product.create;
 
 
+import com.prototype.product.ProductHelper;
 import com.prototype.product.domain.*;
 import com.prototype.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
