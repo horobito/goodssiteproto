@@ -70,5 +70,46 @@ public class SetSoldOutStateTest {
         verify(productRepository, times(1)).save(any());
     }
 
+    @DisplayName("SetSoldOutState Test 3. Abnormal Condition - already SoldOut")
+    @Test
+    public void test3() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 1L;
+
+        ProductHelper productHelper = ProductHelper.create(
+                1L, ProductName.create(productName), ProductPrice.create(productPrice),
+                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+        );
+
+        productHelper.setSoldOut();
+        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
+        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, true));
+    }
+
+    @DisplayName("SetSoldOutState Test 4. Abnormal Condition - already unSoldOut")
+    @Test
+    public void test4() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 1L;
+
+        ProductHelper productHelper = ProductHelper.create(
+                1L, ProductName.create(productName), ProductPrice.create(productPrice),
+                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+        );
+
+        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
+        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, false));
+    }
+
 
 }
