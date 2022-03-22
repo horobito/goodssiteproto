@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,5 +43,24 @@ public class ReviveTest {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         sut.revive(categoryId);
         verify(categoryRepository, times(1)).save(any());
+    }
+
+    @DisplayName("Revive Test2 : Abnormal Condition - category doesn't deleted")
+    @Test
+    public void test2(){
+        CategoryService sut = new CategoryService(categoryRepository);
+
+
+        CategoryName categoryName = CategoryName.create("category1");
+
+        Long categoryId = 1L;
+
+        Category category = CategoryHelper.create(
+                categoryId, categoryName
+        );
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        assertThrows(IllegalArgumentException.class, ()->sut.revive(categoryId));
+
     }
 }
