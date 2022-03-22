@@ -65,4 +65,24 @@ public class ChangeNameTest {
 
     }
 
+
+    @DisplayName("Change name Test 3 : Abnormal Condition -name is too Long")
+    @Test
+    public void test3(){
+        CategoryService sut = new CategoryService(categoryRepository);
+
+
+        CategoryName categoryName = CategoryName.create("category1");
+
+        Long categoryId = 1L;
+
+        Category category = CategoryHelper.create(
+                categoryId, categoryName
+        );
+
+        String newCategoryName = "1234567890*";
+        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        assertThrows(IllegalArgumentException.class, ()->sut.changeCategoryName( newCategoryName, categoryId));
+
+    }
 }
