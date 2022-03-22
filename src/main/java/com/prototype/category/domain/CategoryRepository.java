@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByCategoryNameIn(List<CategoryName> categoryNameList);
 
-    Optional<Category> findByCategoryIdAndIsDeleted(Long categoryId, boolean b);
 }
 
 
