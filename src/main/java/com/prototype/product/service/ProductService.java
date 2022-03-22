@@ -30,27 +30,27 @@ public class ProductService {
 
     public ProductDto delete(Long productId) {
         ProductStrategy productDeleteStrategy = Product::delete;
-        return productContext(productId, productDeleteStrategy);
+        return doStrategy(productId, productDeleteStrategy);
     }
 
     public ProductDto revive(Long productId){
         ProductStrategy productReviveStrategy = Product::revive;
-        return productContext(productId, productReviveStrategy);
+        return doStrategy(productId, productReviveStrategy);
     }
 
     public ProductDto changeStock(Long productId, int amountOfChange){
         ProductStrategy productChangeStockStrategy = product -> product.changeStock(product.getStock()+amountOfChange);
-        return productContext(productId, productChangeStockStrategy);
+        return doStrategy(productId, productChangeStockStrategy);
     }
 
     public ProductDto changeProductName(Long productId, String newProductName){
         ProductStrategy productRenameStrategy = product -> product.changeProductName(newProductName);
-        return productContext(productId, productRenameStrategy);
+        return doStrategy(productId, productRenameStrategy);
     }
 
     public ProductDto changeProductPrice(Long productId, int productPrice){
         ProductStrategy productPriceChangeStrategy = product -> product.changeProductPrice(productPrice);
-        return productContext(productId, productPriceChangeStrategy);
+        return doStrategy(productId, productPriceChangeStrategy);
     }
 
     public ProductDto setSoldOutState(Long productId, boolean isSoldOut){
@@ -61,8 +61,9 @@ public class ProductService {
                 product.setUnSoldOut();
             }
         };
-        return productContext(productId, productSetSoldOutStateStrategy);
+        return doStrategy(productId, productSetSoldOutStateStrategy);
     }
+
 
     public ProductDto setStockInfiniteState(Long productId, boolean isStockInfinite){
         ProductStrategy productSetStockInfiniteStateStrategy = product -> {
@@ -72,10 +73,10 @@ public class ProductService {
                 product.setStockFinite();
             }
         };
-        return productContext(productId, productSetStockInfiniteStateStrategy);
+        return doStrategy(productId, productSetStockInfiniteStateStrategy);
     }
 
-    public ProductDto productContext(Long productId, ProductStrategy productStrategy){
+    public ProductDto doStrategy(Long productId, ProductStrategy productStrategy){
         Optional<Product> product = getProduct(productId);
         if (product.isPresent()) {
             checkUserValidation(product.get().getSellerId());

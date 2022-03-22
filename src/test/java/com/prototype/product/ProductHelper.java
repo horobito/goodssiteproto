@@ -56,8 +56,62 @@ public class ProductHelper extends Product {
 
     }
 
+    public void changeProductName(String productName) {
+        this.productName = ProductName.create(productName);
+    }
+
+    public void changeProductPrice(int productPrice) {
+        this.productPrice = ProductPrice.create(productPrice);
+    }
+
+    public void changeStock(int changedStock) {
+        if (!this.stock.isStockInfinite()) {
+            this.stock = Stock.create(changedStock, this.stock.isStockInfinite());
+        }
+    }
+
+    public void setSoldOut() {
+        if (this.isSoldOut) {
+            throw new IllegalArgumentException();
+        }
+        this.isSoldOut = true;
+    }
+
+    public void setUnSoldOut() {
+        if (!this.isSoldOut) {
+            throw new IllegalArgumentException();
+        }
+        this.isSoldOut = false;
+    }
+
     private void setId(Long id){
         this.productId = id;
+    }
+
+    public void delete() {
+        if (this.isDeleted) {
+            throw new IllegalArgumentException();
+        }
+        this.isDeleted = true;
+    }
+
+    public void revive() {
+        if (!this.isDeleted) {
+            throw new IllegalArgumentException();
+        }
+        this.isDeleted = false;
+    }
+
+    public void setStockInfinite() {
+        Stock newStock = Stock.create(this.stock.getRemainingStocks(), this.stock.isStockInfinite());
+        newStock.setStockInfinite();
+        this.stock = newStock;
+    }
+
+    public void setStockFinite() {
+        Stock newStock = Stock.create(this.stock.getRemainingStocks(), this.stock.isStockInfinite());
+        newStock.setStockFinite();
+        this.stock = newStock;
     }
 
     public Long getProductId() {
