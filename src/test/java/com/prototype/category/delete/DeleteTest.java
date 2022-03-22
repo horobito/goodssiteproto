@@ -40,7 +40,7 @@ public class DeleteTest {
                 categoryId, categoryName
         );
 
-        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         sut.delete(categoryId);
         verify(categoryRepository, times(1)).save(any());
     }
@@ -62,7 +62,7 @@ public class DeleteTest {
         category.delete();
 
         // 여기서 한 번 걸러지겠지만 혹시나...
-        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
         assertThrows(IllegalArgumentException.class, ()->sut.delete(categoryId));
     }

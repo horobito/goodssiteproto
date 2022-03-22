@@ -40,7 +40,7 @@ public class ChangeNameTest {
         );
 
         String newCategoryName = "1234567890";
-        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         sut.changeCategoryName( newCategoryName, categoryId);
         verify(categoryRepository, times(1)).save(any());
     }
@@ -60,7 +60,7 @@ public class ChangeNameTest {
         );
 
         String newCategoryName = "";
-        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         assertThrows(IllegalArgumentException.class, ()->sut.changeCategoryName( newCategoryName, categoryId));
 
     }
@@ -81,7 +81,7 @@ public class ChangeNameTest {
         );
 
         String newCategoryName = "1234567890*";
-        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         assertThrows(IllegalArgumentException.class, ()->sut.changeCategoryName( newCategoryName, categoryId));
 
     }
