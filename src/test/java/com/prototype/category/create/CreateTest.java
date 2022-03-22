@@ -51,5 +51,32 @@ public class CreateTest {
 
     }
 
+    @DisplayName("Create test 2 . normal condition -Duplicate exclusion verification ")
+    @Test
+    public void test2(){
+        CategoryService sut = new CategoryService(categoryRepository);
+
+        List<String> categories = new ArrayList<>();
+        categories.add("fantasy");
+        categories.add("new");
+        categories.add("horror");
+
+        List<Category> existingCategories = new ArrayList<>();
+        existingCategories.add(new CategoryHelper(CategoryName.create("fantasy")));
+        existingCategories.add(new CategoryHelper(CategoryName.create("horror")));
+
+        List<Category> newCategories = new ArrayList<>();
+        existingCategories.add(new CategoryHelper(CategoryName.create("new")));
+
+        when(categoryRepository.findByCategoryNameIn(any())).thenReturn(existingCategories);
+        when(categoryRepository.saveAll(any())).thenReturn(newCategories);
+
+        sut.createCategories(categories);
+
+        verify(categoryRepository, times(1)).saveAll(any());
+
+
+    }
+
 
 }
