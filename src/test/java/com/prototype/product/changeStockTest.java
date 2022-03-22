@@ -44,4 +44,31 @@ public class changeStockTest {
 
 
     }
+
+    @DisplayName("change Test 2. Normal Condition - sum is zero")
+    @Test
+    public void test2() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 1L;
+
+        ProductHelper productHelper = ProductHelper.create(
+                1L, ProductName.create(productName), ProductPrice.create(productPrice),
+                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+        );
+
+        int changeAmount = 0-stock;
+
+        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
+        when(productRepository.save(any())).thenReturn(productHelper);
+
+        sut.changeStock(1L, changeAmount);
+        verify(productRepository, times(1)).save(any());
+
+
+    }
 }
