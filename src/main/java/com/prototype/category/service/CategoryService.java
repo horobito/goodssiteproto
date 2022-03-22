@@ -40,7 +40,7 @@ public class CategoryService {
     }
 
     public void delete(Long categoryId){
-        Optional<Category> category = categoryRepository.findByCategoryIdAndDeleted(categoryId, false);
+        Optional<Category> category = categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false);
         if (category.isPresent()) {
             category.get().delete();
         }else {
@@ -49,7 +49,7 @@ public class CategoryService {
     }
 
     public void revive(Long categoryId){
-        Optional<Category> category = categoryRepository.findByCategoryIdAndDeleted(categoryId, false);
+        Optional<Category> category = categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false);
         if (category.isPresent()) {
             category.get().revive();
         }else {
