@@ -28,17 +28,6 @@ public class ProductService {
         return getProductDto(saved);
     }
 
-    public ProductDto productContext(Long productId, ProductStrategy productStrategy){
-        Optional<Product> product = getProduct(productId);
-        if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
-            productStrategy.executeStrategy(product.get());
-            product.get().delete();
-            return getProductDto(productRepository.save(product.get()));
-        }
-        throw new IllegalArgumentException();
-    }
-
     public ProductDto delete(Long productId) {
         ProductStrategy productDeleteStrategy = Product::delete;
         return productContext(productId, productDeleteStrategy);
@@ -86,6 +75,16 @@ public class ProductService {
         return productContext(productId, productSetStockInfiniteStateStrategy);
     }
 
+    public ProductDto productContext(Long productId, ProductStrategy productStrategy){
+        Optional<Product> product = getProduct(productId);
+        if (product.isPresent()) {
+            checkUserValidation(product.get().getSellerId());
+            productStrategy.executeStrategy(product.get());
+            return getProductDto(productRepository.save(product.get()));
+        }
+        throw new IllegalArgumentException();
+    }
+
 
     private Optional<Product> getProduct(Long productId) {
         return productRepository.findById(productId);
@@ -94,7 +93,7 @@ public class ProductService {
 
     private void checkUserValidation(Long sellerId) {
         Long userId= 1L;
-        if (sellerId.equals(userId)){
+        if (!sellerId.equals(userId)){
             throw new IllegalArgumentException();
         }
     }

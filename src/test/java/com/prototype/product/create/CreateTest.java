@@ -1,6 +1,7 @@
-package com.prototype.product;
+package com.prototype.product.create;
 
 
+import com.prototype.product.ProductHelper;
 import com.prototype.product.domain.*;
 import com.prototype.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -40,9 +41,41 @@ public class CreateTest {
 
         sut.create(productName, productPrice, stock, isStockInfinite);
         verify(productRepository, times(1)).save(any());
+
+
+
+
     }
 
-    @DisplayName("Create Test 2. Abnormal Condition - name length error ")
+    @DisplayName("Create Test 1.5 Normal Condition - length limit test")
+    @Test
+    public void test11() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 2L;
+
+        String productNameHundred
+                =
+                "12345678901234567890123456789012345678901234567890" +
+                        "12345678901234567890123456789012345678901234567890";
+
+        ProductHelper productHelper2 = ProductHelper.create(
+                1L, ProductName.create(productNameHundred), ProductPrice.create(productPrice),
+                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+        );
+
+        when(productRepository.save(any())).thenReturn(productHelper2);
+
+        sut.create(productNameHundred, productPrice, stock, isStockInfinite);
+        verify(productRepository, times(1)).save(any());
+
+    }
+
+        @DisplayName("Create Test 2. Abnormal Condition - name length error ")
     @Test
     public void test2() {
         ProductService sut = new ProductService(productRepository);
@@ -52,6 +85,8 @@ public class CreateTest {
                 =
                 "12345678901234567890123456789012345678901234567890" +
                         "12345678901234567890123456789012345678901234567890*";
+
+
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
