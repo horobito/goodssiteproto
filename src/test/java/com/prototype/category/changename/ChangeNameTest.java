@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -24,7 +25,7 @@ public class ChangeNameTest {
     CategoryRepository categoryRepository;
 
 
-    @DisplayName("Change name Test : Normal Condition")
+    @DisplayName("Change name Test1 : Normal Condition")
     @Test
     public void test1(){
         CategoryService sut = new CategoryService(categoryRepository);
@@ -42,6 +43,26 @@ public class ChangeNameTest {
         when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
         sut.changeCategoryName( newCategoryName, categoryId);
         verify(categoryRepository, times(1)).save(any());
+    }
+
+    @DisplayName("Change name Test 2 : Abnormal Condition -name is too short")
+    @Test
+    public void test2(){
+        CategoryService sut = new CategoryService(categoryRepository);
+
+
+        CategoryName categoryName = CategoryName.create("category1");
+
+        Long categoryId = 1L;
+
+        Category category = CategoryHelper.create(
+                categoryId, categoryName
+        );
+
+        String newCategoryName = "";
+        when(categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false)).thenReturn(Optional.of(category));
+        assertThrows(IllegalArgumentException.class, ()->sut.changeCategoryName( newCategoryName, categoryId));
+
     }
 
 }
