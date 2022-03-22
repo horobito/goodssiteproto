@@ -48,7 +48,7 @@ public class ChangeStockPriceTest {
         verify(productRepository, times(1)).save(any());
     }
 
-    @DisplayName("ChangeProductPrice Test 2. Normal Condition - price is over zero ")
+    @DisplayName("ChangeProductPrice Test 2. Normal Condition - price is over zero")
     @Test
     public void test2() {
         ProductService sut = new ProductService(productRepository);
