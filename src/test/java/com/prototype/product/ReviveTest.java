@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,6 +42,26 @@ public class ReviveTest {
 
         sut.revive(1L);
         verify(productRepository, times(1)).save(any());
+    }
+
+    @DisplayName("Revive Test 2. Abnormal Condition - non deleted")
+    @Test
+    public void test2() {
+        ProductService sut = new ProductService(productRepository);
+
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long userId = 1L;
+
+        ProductHelper productHelper = ProductHelper.create(
+                1L, ProductName.create(productName), ProductPrice.create(productPrice),
+                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+        );
+        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
+        assertThrows(IllegalArgumentException.class, ()->sut.revive(1L));
+
     }
 
 }
