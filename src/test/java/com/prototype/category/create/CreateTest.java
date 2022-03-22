@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -74,8 +75,16 @@ public class CreateTest {
         sut.createCategories(categories);
 
         verify(categoryRepository, times(1)).saveAll(any());
+    }
 
+    @DisplayName("Create test 3 . Abnormal condition - name length is too short")
+    @Test
+    public void test3(){
+        CategoryService sut = new CategoryService(categoryRepository);
 
+        List<String> categories = new ArrayList<>();
+        categories.add("");
+        assertThrows(IllegalArgumentException.class, ()->sut.createCategories(categories));
     }
 
 
