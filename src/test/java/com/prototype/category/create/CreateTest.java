@@ -33,7 +33,7 @@ public class CreateTest {
         CategoryService sut = new CategoryService(categoryRepository);
 
         List<String> categories = new ArrayList<>();
-        categories.add("fantasy");
+        categories.add("1234567890");
         categories.add("romance");
         categories.add("horror");
 
@@ -84,6 +84,16 @@ public class CreateTest {
 
         List<String> categories = new ArrayList<>();
         categories.add("");
+        assertThrows(IllegalArgumentException.class, ()->sut.createCategories(categories));
+    }
+
+    @DisplayName("Create test 4 . Abnormal condition - name length is too long")
+    @Test
+    public void test4(){
+        CategoryService sut = new CategoryService(categoryRepository);
+
+        List<String> categories = new ArrayList<>();
+        categories.add("1234567890*");
         assertThrows(IllegalArgumentException.class, ()->sut.createCategories(categories));
     }
 
