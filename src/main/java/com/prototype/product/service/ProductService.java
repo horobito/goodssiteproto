@@ -80,7 +80,6 @@ public class ProductService {
         if (product.isPresent()) {
             checkUserValidation(product.get().getSellerId());
             productStrategy.executeStrategy(product.get());
-            product.get().delete();
             return getProductDto(productRepository.save(product.get()));
         }
         throw new IllegalArgumentException();
@@ -94,7 +93,7 @@ public class ProductService {
 
     private void checkUserValidation(Long sellerId) {
         Long userId= 1L;
-        if (sellerId.equals(userId)){
+        if (!sellerId.equals(userId)){
             throw new IllegalArgumentException();
         }
     }
