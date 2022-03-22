@@ -4,7 +4,7 @@ package com.prototype.category.service;
 import com.prototype.category.domain.Category;
 import com.prototype.category.domain.CategoryName;
 import com.prototype.category.domain.CategoryRepository;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> createCategories(List<String> inputtedNames) {
         List<Category> existedCategories = categoryRepository.findByCategoryNameIn(getCategoryNames(inputtedNames));
@@ -30,28 +30,28 @@ public class CategoryService {
     }
 
 
-    public void changeCategoryName(String newName, Long categoryId) {
-        categoryRepository.findById(categoryId).ifPresent(
-                category -> {
-                    category.changeCategoryName(newName);
-                    categoryRepository.save(category);
-                }
-        );
-    }
-
     public void delete(Long categoryId){
-        Optional<Category> category = categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false);
-        if (category.isPresent()) {
-            category.get().delete();
-        }else {
-            throw new IllegalArgumentException();
-        }
+        CategoryStrategy deleteStrategy = Category::delete;
+        doStrategy(categoryId, deleteStrategy);
     }
 
     public void revive(Long categoryId){
-        Optional<Category> category = categoryRepository.findByCategoryIdAndIsDeleted(categoryId, false);
+        CategoryStrategy reviveStrategy = Category::revive;
+        doStrategy(categoryId, reviveStrategy);
+    }
+
+    public void changeCategoryName(String newName, Long categoryId) {
+        CategoryStrategy changeNameStrategy = category -> category.changeCategoryName(newName);
+        doStrategy(categoryId, changeNameStrategy);
+    }
+
+
+
+    public void doStrategy(Long categoryId, CategoryStrategy strategy){
+        Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
-            category.get().revive();
+            strategy.doStrategy(category.get());
+            categoryRepository.save(category.get());
         }else {
             throw new IllegalArgumentException();
         }
@@ -83,6 +83,7 @@ public class CategoryService {
 
     private List<CategoryName> excludeDuplication(List<String> inputtedNames, List<Category> existedCategories) {
         List<CategoryName> newCategoryNames = new ArrayList<>();
+
         Set<String> existedNames =
                 existedCategories.stream().map(it -> it.getCategoryName().showValue()).collect(Collectors.toSet());
 
