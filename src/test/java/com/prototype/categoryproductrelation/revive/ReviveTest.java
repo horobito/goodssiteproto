@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -39,4 +40,21 @@ public class ReviveTest {
         verify(relationRepository, times(1)).save(any());
     }
 
+
+    @DisplayName("Revive Test 2. Abnormal Condition : non deleted")
+    @Test
+    public void test2(){
+
+        CategoryProductRelationService sut = new CategoryProductRelationService(relationRepository);
+
+        Long categoryId = 1L;
+        Long productId = 1L;
+
+        CategoryProductRelation relation = CategoryProductRelation.create(categoryId,productId);
+
+        when(relationRepository.findById(any())).thenReturn(Optional.of(relation));
+
+        assertThrows(IllegalArgumentException.class, ()->sut.revive(categoryId, productId));
+
+    }
 }
