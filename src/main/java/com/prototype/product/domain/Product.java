@@ -63,6 +63,14 @@ public class Product {
         }
     }
 
+    public void changeStockInfiniteState(boolean isStockInfinite){
+        if (isStockInfinite) {
+            this.stock.setStockInfinite();
+        }else {
+            this.stock.setStockFinite();
+        }
+    }
+
     public void setSoldOut() {
         if (this.isSoldOut) {
             throw new IllegalArgumentException();

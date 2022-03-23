@@ -100,4 +100,7 @@ public class CategoryService {
         return names.stream().map(CategoryName::create).collect(Collectors.toList());
     }
 
+    public List<CategoryDto> getRelatedCategory(Long productId) {
+        return getCategoryDtos(categoryRepository.findByRelatedCategory(productId));
+    }
 }
