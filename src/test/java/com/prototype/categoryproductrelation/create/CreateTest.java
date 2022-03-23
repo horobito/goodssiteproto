@@ -25,7 +25,7 @@ public class CreateTest {
     CategoryProductRelationRepository relationRepository;
 
 
-    @DisplayName("Create test 1. Normal Condition")
+    @DisplayName("Create test 1. Normal Condition - All relations are new ")
     @Test
     public void test1() {
         CategoryProductRelationService sut = new CategoryProductRelationService(relationRepository);
@@ -49,6 +49,33 @@ public class CreateTest {
         List<RelationDto> result = sut.createRelations(categoryIds, productId);
 
 
+
+        verify(relationRepository, times(1)).saveAll(any());
+    }
+
+    @DisplayName("Create test 2. Normal Condition - common case")
+    @Test
+    public void test2() {
+        CategoryProductRelationService sut = new CategoryProductRelationService(relationRepository);
+
+
+        List<Long> categoryIds = Arrays.asList(1L, 2L, 3L);
+
+        Long productId = 1L;
+
+        List<CategoryProductRelation> existingRelations
+                = Arrays.asList(
+                CategoryProductRelation.create(1L, productId),
+                CategoryProductRelation.create(2L, productId)
+        );
+
+        when(relationRepository.findByProductIdAndCategoryIdIn(productId, categoryIds))
+                .thenReturn(existingRelations);
+
+        List<CategoryProductRelation> newRelation = Arrays.asList(CategoryProductRelation.create(3L, productId));
+        when(relationRepository.saveAll(anyCollection())).thenReturn(newRelation);
+
+        List<RelationDto> result = sut.createRelations(categoryIds, productId);
 
         verify(relationRepository, times(1)).saveAll(any());
     }
