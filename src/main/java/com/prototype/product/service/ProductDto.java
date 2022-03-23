@@ -13,6 +13,8 @@ public class ProductDto {
 
     Long sellerId;
 
+    String sellerName;
+
     int stock;
 
     boolean isStockInfinite;
