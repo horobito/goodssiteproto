@@ -116,6 +116,7 @@ public class ProductService {
                 product.getProductName(),
                 product.getProductPrice(),
                 product.getSellerId(),
+                "temp",
                 product.getStock(),
                 product.isStockInfinite(),
                 product.isSoldOut(),
