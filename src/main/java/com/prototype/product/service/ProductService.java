@@ -64,6 +64,16 @@ public class ProductService {
         return doStrategy(productId, productSetSoldOutStateStrategy);
     }
 
+    public ProductDto update(Long productId, String productName, int productPrice, int amountOfChange, boolean isStockInfinite) {
+        ProductStrategy updateStrategy = product -> {
+            product.changeProductName(productName);
+            product.changeProductPrice(productPrice);
+            product.changeStock(amountOfChange);
+            product.changeStockInfiniteState(isStockInfinite);
+        };
+        return doStrategy(productId, updateStrategy);
+    }
+
 
     public ProductDto setStockInfiniteState(Long productId, boolean isStockInfinite){
         ProductStrategy productSetStockInfiniteStateStrategy = product -> {
@@ -112,4 +122,6 @@ public class ProductService {
                 product.isDeleted()
         );
     }
+
+
 }
