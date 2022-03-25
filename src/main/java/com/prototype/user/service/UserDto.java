@@ -19,6 +19,4 @@ public class UserDto {
     boolean isDeleted;
 
     LocalDate birthDay;
-
-    String authority;
 }

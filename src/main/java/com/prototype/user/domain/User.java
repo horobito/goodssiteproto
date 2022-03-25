@@ -27,21 +27,18 @@ public class User {
 
     private LocalDate birthDay;
 
-    @Embedded
-    private Authority auth;
 
 
-    private User(Username username, Password password, Authority auth, LocalDate birthDay, Gender gender) {
+    private User(Username username, Password password,  LocalDate birthDay, Gender gender) {
         this.username = username;
         this.password = password;
         this.isDeleted = false;
         this.birthDay = birthDay;
-        this.auth = auth;
         this.gender = gender;
     }
 
-    public static User create(Username username, Password password, Authority auth, LocalDate birthDay, Gender gender) {
-        return new User(username, password, auth, birthDay, gender);
+    public static User create(Username username, Password password, LocalDate birthDay, Gender gender) {
+        return new User(username, password,  birthDay, gender);
     }
 
 
@@ -75,9 +72,6 @@ public class User {
     public void changeGender(String gender) {
         this.gender = Gender.create(gender.toUpperCase());
     }
-
-
-
 
 
 

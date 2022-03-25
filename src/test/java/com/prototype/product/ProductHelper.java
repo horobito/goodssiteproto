@@ -70,6 +70,14 @@ public class ProductHelper extends Product {
         }
     }
 
+    public void changeStockInfiniteState(boolean isStockInfinite){
+        if (isStockInfinite) {
+            this.stock.setStockInfinite();
+        }else {
+            this.stock.setStockFinite();
+        }
+    }
+
     public void setSoldOut() {
         if (this.isSoldOut) {
             throw new IllegalArgumentException();
@@ -102,16 +110,11 @@ public class ProductHelper extends Product {
         this.isDeleted = false;
     }
 
-    public void setStockInfinite() {
-        Stock newStock = Stock.create(this.stock.getRemainingStocks(), this.stock.isStockInfinite());
-        newStock.setStockInfinite();
-        this.stock = newStock;
-    }
-
-    public void setStockFinite() {
-        Stock newStock = Stock.create(this.stock.getRemainingStocks(), this.stock.isStockInfinite());
-        newStock.setStockFinite();
-        this.stock = newStock;
+    public void deductStockAmount(int deductedAmount){
+        if (deductedAmount<=0){
+            throw new IllegalArgumentException();
+        }
+        this.stock = Stock.create(this.stock.getRemainingStocks()-deductedAmount, this.isStockInfinite());
     }
 
     public Long getProductId() {
@@ -130,7 +133,7 @@ public class ProductHelper extends Product {
         return this.sellerId.getSellerId();
     }
 
-    public int getStock() {
+    public int getStockAmount() {
         return this.stock.getRemainingStocks();
     }
 

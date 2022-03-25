@@ -1,4 +1,4 @@
-package com.prototype.product.setsoldoutstate;
+package com.prototype.product.changeProductInfo;
 
 import com.prototype.product.ProductHelper;
 import com.prototype.product.domain.*;
@@ -17,11 +17,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
-
 
 @ExtendWith(MockitoExtension.class)
-public class SetSoldOutStateTest {
+public class ChangeProductStockAmountTest {
 
     @Mock
     ProductRepository productRepository;
@@ -29,8 +27,7 @@ public class SetSoldOutStateTest {
     @Mock
     UserService userService;
 
-
-    @DisplayName("SetSoldOutState Test 1. Normal Condition - setSoldOut")
+    @DisplayName("Change Stock  Test 1. Normal Condition")
     @Test
     public void test1() {
         ProductService sut = new ProductService(productRepository, userService);
@@ -39,15 +36,15 @@ public class SetSoldOutStateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
 
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -55,15 +52,22 @@ public class SetSoldOutStateTest {
                 LocalDate.now()
         );
 
+        int changedStockAmount = 2;
+        String newName = "newName";
+        int newPrice = 1;
+        boolean newIsStockInfinite = false;
+
+        when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
-        when(userService.getLoggedInUser()).thenReturn(userDto);
 
-        sut.setSoldOutState(1L, true);
+        sut.update(1L, newName, newPrice, changedStockAmount, newIsStockInfinite);
         verify(productRepository, times(1)).save(any());
+
+
     }
 
-    @DisplayName("SetSoldOutState Test 2. Normal Condition - setUnsoldOut")
+    @DisplayName("Change Stock 2. Normal Condition - new stock amount is zero")
     @Test
     public void test2() {
         ProductService sut = new ProductService(productRepository, userService);
@@ -72,14 +76,20 @@ public class SetSoldOutStateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
+
+        int changedStockAmount = 0;
+        String newName = "newName";
+        int newPrice = 1;
+        boolean newIsStockInfinite = false;
+
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -87,17 +97,17 @@ public class SetSoldOutStateTest {
                 LocalDate.now()
         );
 
-        productHelper.setSoldOut();
+        when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
-        when(userService.getLoggedInUser()).thenReturn(userDto);
 
-
-        sut.setSoldOutState(1L, false);
+        sut.update(1L, newName, newPrice, changedStockAmount, newIsStockInfinite);
         verify(productRepository, times(1)).save(any());
+
+
     }
 
-    @DisplayName("SetSoldOutState Test 3. Abnormal Condition - already SoldOut")
+    @DisplayName("Change Stock 3. Abnormal Condition - sum is minus")
     @Test
     public void test3() {
         ProductService sut = new ProductService(productRepository, userService);
@@ -106,46 +116,21 @@ public class SetSoldOutStateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
+
+        int changedStockAmount = -1;
+        String newName = "newName";
+        int newPrice = 1;
+        boolean newIsStockInfinite = false;
+
 
         UserDto userDto = new UserDto(
-                1L,
-                "user1",
-                "password1",
-                "MALE",
-                false,
-                LocalDate.now()
-        );
-
-        when(userService.getLoggedInUser()).thenReturn(userDto);
-        productHelper.setSoldOut();
-        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
-        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, true));
-    }
-
-    @DisplayName("SetSoldOutState Test 4. Abnormal Condition - already unSoldOut")
-    @Test
-    public void test4() {
-        ProductService sut = new ProductService(productRepository, userService);
-
-        String productName = "testName 1";
-        int productPrice = 1;
-        int stock = 1;
-        boolean isStockInfinite = false;
-        Long userId = 1L;
-
-        ProductHelper productHelper = ProductHelper.create(
-                1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
-        );
-
-        UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -155,8 +140,10 @@ public class SetSoldOutStateTest {
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
-        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, false));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.update(1L, newName, newPrice, changedStockAmount, newIsStockInfinite));
+
+
     }
-
-
 }

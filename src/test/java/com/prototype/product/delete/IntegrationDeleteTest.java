@@ -1,17 +1,24 @@
 package com.prototype.product.delete;
 
 
+import com.prototype.product.domain.Product;
 import com.prototype.product.domain.ProductRepository;
 import com.prototype.product.service.ProductDto;
 import com.prototype.product.service.ProductService;
+import com.prototype.user.service.UserDto;
+import com.prototype.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class IntegrationDeleteTest {
@@ -19,44 +26,55 @@ public class IntegrationDeleteTest {
     @Autowired
     ProductRepository productRepository;
 
+    @Mock
+    UserService userService;
+
 
     @DisplayName("Integration Delete Test")
+    @Transactional
     @Test
     public void test1() {
-        ProductService sut = new ProductService(productRepository);
+        ProductService sut = new ProductService(productRepository, userService);
 
-        String productName = "product1";
-        int productPrice = 100;
-        int stock = 10;
-        boolean isStockInfinite = false;
-
-        Long expectedProductId = 1L;
-        Long expectedSellerId = 1L;
-
-        ProductDto expected = new ProductDto(
-                expectedProductId,
-                productName,
-                productPrice,
-                expectedSellerId,
-                stock,
+        UserDto loggedInUser = new UserDto(
+                1L,
+                "username 1",
+                "password 1",
+                "MALE",
                 false,
-                false,
+                LocalDate.now()
+        );
+
+        Long expectedProductId =1L;
+
+        Product expected = productRepository.findById(expectedProductId).get();
+
+        ProductDto expectedDto = new ProductDto(
+                expected.getProductId(),
+                expected.getProductName(),
+                expected.getProductPrice(),
+                loggedInUser.getUserId(),
+                loggedInUser.getUsername(),
+                expected.getStockAmount(),
+                expected.isStockInfinite(),
+                expected.isSoldOut(),
                 true
-
         );
 
 
 
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+
         ProductDto deleted = sut.delete(expectedProductId);
 
-        assertEquals(expected.getProductId(), deleted.getProductId());
-        assertEquals(expected.getProductName(), deleted.getProductName());
-        assertEquals(expected.getProductPrice(), deleted.getProductPrice());
-        assertEquals(expected.getSellerId(), deleted.getSellerId());
-        assertEquals(expected.getStock(), deleted.getStock());
-        assertEquals(expected.isStockInfinite(), deleted.isStockInfinite());
-        assertEquals(expected.isSoldOut(), deleted.isSoldOut());
-        assertEquals(expected.isDeleted(), deleted.isDeleted());
+        assertEquals(expectedDto.getProductId(), deleted.getProductId());
+        assertEquals(expectedDto.getProductName(), deleted.getProductName());
+        assertEquals(expectedDto.getProductPrice(), deleted.getProductPrice());
+        assertEquals(expectedDto.getSellerId(), deleted.getSellerId());
+        assertEquals(expectedDto.getStock(), deleted.getStock());
+        assertEquals(expectedDto.isStockInfinite(), deleted.isStockInfinite());
+        assertEquals(expectedDto.isSoldOut(), deleted.isSoldOut());
+        assertEquals(expectedDto.isDeleted(), deleted.isDeleted());
 
     }
 }

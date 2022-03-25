@@ -1,4 +1,4 @@
-package com.prototype.product.setsoldoutstate;
+package com.prototype.product.changeProductInfo;
 
 import com.prototype.product.ProductHelper;
 import com.prototype.product.domain.*;
@@ -17,11 +17,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
-
 
 @ExtendWith(MockitoExtension.class)
-public class SetSoldOutStateTest {
+public class DeductProductStockAmountTest {
 
     @Mock
     ProductRepository productRepository;
@@ -29,25 +27,24 @@ public class SetSoldOutStateTest {
     @Mock
     UserService userService;
 
-
-    @DisplayName("SetSoldOutState Test 1. Normal Condition - setSoldOut")
+    @DisplayName("Deduction Stock Test 1. Normal Condition :")
     @Test
     public void test1() {
         ProductService sut = new ProductService(productRepository, userService);
 
         String productName = "testName 1";
         int productPrice = 1;
-        int stock = 1;
+        int stock = 2;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
 
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -55,31 +52,34 @@ public class SetSoldOutStateTest {
                 LocalDate.now()
         );
 
+        int deductedAmount = 1;
+
+        when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
-        when(userService.getLoggedInUser()).thenReturn(userDto);
 
-        sut.setSoldOutState(1L, true);
+        sut.deductStockAmount(1L, deductedAmount);
         verify(productRepository, times(1)).save(any());
     }
 
-    @DisplayName("SetSoldOutState Test 2. Normal Condition - setUnsoldOut")
+    @DisplayName("Deduction Stock Test 2. Normal Condition : After deduction, stock amount is zero")
     @Test
     public void test2() {
         ProductService sut = new ProductService(productRepository, userService);
 
         String productName = "testName 1";
         int productPrice = 1;
-        int stock = 1;
+        int stock = 2;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
+
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -87,17 +87,17 @@ public class SetSoldOutStateTest {
                 LocalDate.now()
         );
 
-        productHelper.setSoldOut();
+        int deductedAmount = stock;
+
+        when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
-        when(userService.getLoggedInUser()).thenReturn(userDto);
 
-
-        sut.setSoldOutState(1L, false);
+        sut.deductStockAmount(1L, deductedAmount);
         verify(productRepository, times(1)).save(any());
     }
 
-    @DisplayName("SetSoldOutState Test 3. Abnormal Condition - already SoldOut")
+    @DisplayName("Deduction Stock Stock 3. Abnormal Condition - deduction amount is zero")
     @Test
     public void test3() {
         ProductService sut = new ProductService(productRepository, userService);
@@ -106,15 +106,17 @@ public class SetSoldOutStateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
 
+        int deductedAmount = 0;
+
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -123,12 +125,15 @@ public class SetSoldOutStateTest {
         );
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
-        productHelper.setSoldOut();
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
-        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, true));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.deductStockAmount(1L, deductedAmount));
+
+
     }
 
-    @DisplayName("SetSoldOutState Test 4. Abnormal Condition - already unSoldOut")
+    @DisplayName("Deduction Stock Stock 4. Abnormal Condition - deduction amount is minus")
     @Test
     public void test4() {
         ProductService sut = new ProductService(productRepository, userService);
@@ -137,15 +142,17 @@ public class SetSoldOutStateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
-        Long userId = 1L;
+        Long sellerId = 1L;
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
         );
 
+        int deductedAmount = -1;
+
         UserDto userDto = new UserDto(
-                1L,
+                sellerId,
                 "user1",
                 "password1",
                 "MALE",
@@ -155,8 +162,44 @@ public class SetSoldOutStateTest {
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
-        assertThrows(IllegalArgumentException.class, ()->sut.setSoldOutState(1L, false));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.deductStockAmount(1L, deductedAmount));
     }
 
+    @DisplayName("Deduction Stock Stock 5. Abnormal Condition - After deduction, stock amount is minus ")
+    @Test
+    public void test5() {
+        ProductService sut = new ProductService(productRepository, userService);
 
+        String productName = "testName 1";
+        int productPrice = 1;
+        int stock = 1;
+        boolean isStockInfinite = false;
+        Long sellerId = 1L;
+
+        ProductHelper productHelper = ProductHelper.create(
+                1L, ProductName.create(productName), ProductPrice.create(productPrice),
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+        );
+
+        int deductedAmount = stock+2;
+
+        UserDto userDto = new UserDto(
+                sellerId,
+                "user1",
+                "password1",
+                "MALE",
+                false,
+                LocalDate.now()
+        );
+
+        when(userService.getLoggedInUser()).thenReturn(userDto);
+        when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.deductStockAmount(1L, deductedAmount));
+
+
+    }
 }

@@ -64,6 +64,15 @@ public class ProductManagerService {
 
 
     private EssentialProductInfo getEssentialProductDto(ProductDto productDto, List<CategoryDto> categoryDtos) {
+        return new EssentialProductInfo(
+                productDto.getProductId(),
+                productDto.getProductName(),
+                productDto.getSellerId(),
+                productDto.getSellerName(),
+                productDto.getProductPrice(),
+                productDto.isSoldOut(),
+                categoryDtos
+        );
     }
 
 }
