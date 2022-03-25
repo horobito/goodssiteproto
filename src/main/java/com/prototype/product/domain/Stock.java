@@ -42,16 +42,10 @@ public class Stock {
     }
 
     public void setStockInfinite(){
-        if (this.isStockInfinite){
-            throw new IllegalArgumentException();
-        }
         this.isStockInfinite = true;
     }
 
     public void setStockFinite(){
-         if (!this.isStockInfinite){
-             throw new IllegalArgumentException();
-         }
          this.isStockInfinite= false;
     }
 }
