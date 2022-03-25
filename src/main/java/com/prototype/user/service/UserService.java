@@ -17,8 +17,7 @@ public class UserService {
                 "temp password",
                 "temp gender",
                 false,
-                LocalDate.now(),
-                "temp auth"
+                LocalDate.now()
         );
     }
     // temp
@@ -29,8 +28,7 @@ public class UserService {
                 "temp password",
                 "temp gender",
                 false,
-                LocalDate.now(),
-                "temp auth"
+                LocalDate.now()
         );
     }
 }
