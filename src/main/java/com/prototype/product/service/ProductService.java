@@ -2,6 +2,7 @@ package com.prototype.product.service;
 
 
 import com.prototype.product.domain.*;
+import com.prototype.user.service.UserDto;
 import com.prototype.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,15 @@ public class ProductService {
     // manager 영역에서 사용할 것들
 
     public ProductDto create(String productName, int productPrice, int stock, boolean isStockInfinite) {
-        Long userid = 1L;
+        UserDto seller = userService.getLoggedInUser();
         Product newProduct = Product.create(
                 ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userid), Stock.create(stock, isStockInfinite)
+                SellerId.create(seller.getUserId()), Stock.create(stock, isStockInfinite)
         );
 
         Product saved = productRepository.save(newProduct);
 
-        return getProductDto(saved, userService.getUserInfo(userid).getUsername());
+        return getProductDto(saved, seller.getUsername());
     }
 
     public ProductDto delete(Long productId) {
@@ -38,21 +39,6 @@ public class ProductService {
     public ProductDto revive(Long productId) {
         ProductStrategy productReviveStrategy = Product::revive;
         return doStrategy(productId, productReviveStrategy);
-    }
-
-    public ProductDto changeStock(Long productId, int amountOfChange) {
-        ProductStrategy productChangeStockStrategy = product -> product.changeStock(product.getStock() + amountOfChange);
-        return doStrategy(productId, productChangeStockStrategy);
-    }
-
-    public ProductDto changeProductName(Long productId, String newProductName) {
-        ProductStrategy productRenameStrategy = product -> product.changeProductName(newProductName);
-        return doStrategy(productId, productRenameStrategy);
-    }
-
-    public ProductDto changeProductPrice(Long productId, int productPrice) {
-        ProductStrategy productPriceChangeStrategy = product -> product.changeProductPrice(productPrice);
-        return doStrategy(productId, productPriceChangeStrategy);
     }
 
     public ProductDto setSoldOutState(Long productId, boolean isSoldOut) {
@@ -66,36 +52,32 @@ public class ProductService {
         return doStrategy(productId, productSetSoldOutStateStrategy);
     }
 
-    public ProductDto update(Long productId, String productName, int productPrice, int amountOfChange, boolean isStockInfinite) {
+    public ProductDto update(Long productId, String productName, int productPrice, int amountOfStockChange, boolean isStockInfinite) {
         ProductStrategy updateStrategy = product -> {
             product.changeProductName(productName);
             product.changeProductPrice(productPrice);
-            product.changeStock(amountOfChange);
+            product.changeStock(amountOfStockChange);
             product.changeStockInfiniteState(isStockInfinite);
         };
         return doStrategy(productId, updateStrategy);
     }
 
-
-    public ProductDto setStockInfiniteState(Long productId, boolean isStockInfinite) {
-        ProductStrategy productSetStockInfiniteStateStrategy = product -> {
-            if (isStockInfinite) {
-                product.setStockInfinite();
-            } else {
-                product.setStockFinite();
-            }
+    public ProductDto deductStockAmount(Long productId,int deductedAmount) {
+        ProductStrategy stockAmountDeductionStrategy = product -> {
+            product.deductStockAmount(deductedAmount);
         };
-        return doStrategy(productId, productSetStockInfiniteStateStrategy);
+        return doStrategy(productId,stockAmountDeductionStrategy );
     }
 
     public ProductDto doStrategy(Long productId, ProductStrategy productStrategy) {
         Optional<Product> product = getProduct(productId);
         if (product.isPresent()) {
-            checkUserValidation(product.get().getSellerId());
+            UserDto loggedUser = userService.getLoggedInUser();
+            checkUserValidation(loggedUser.getUserId(), product.get().getSellerId());
             productStrategy.executeStrategy(product.get());
             return getProductDto(
                     productRepository.save(product.get()),
-                    userService.getUserInfo(product.get().getSellerId()).getUsername());
+                    loggedUser.getUsername());
         }
         throw new IllegalArgumentException();
     }
@@ -106,9 +88,8 @@ public class ProductService {
     }
 
 
-    private void checkUserValidation(Long sellerId) {
-        Long userId = 1L;
-        if (!sellerId.equals(userId)) {
+    private void checkUserValidation(Long loggedInUser, Long sellerId) {
+        if (!loggedInUser.equals(sellerId)) {
             throw new IllegalArgumentException();
         }
     }
@@ -121,7 +102,7 @@ public class ProductService {
                 product.getProductPrice(),
                 product.getSellerId(),
                 sellerName,
-                product.getStock(),
+                product.getStockAmount(),
                 product.isStockInfinite(),
                 product.isSoldOut(),
                 product.isDeleted()
