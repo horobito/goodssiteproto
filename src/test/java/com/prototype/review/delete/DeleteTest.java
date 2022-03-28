@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -71,4 +70,45 @@ public class DeleteTest {
 
     }
 
+
+    @DisplayName("Delete test 2. Abnormal Condition : reviewer mismatches user ")
+    @Test
+    public void test2(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        Long reviewerId = 2L;
+
+        String comment = "comment";
+        int maxScore = 10;
+        int minScore = 1;
+
+        Review review = Review.create(
+                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(maxScore)
+        );
+        assertFalse( review.isDeleted());
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+        ()->sut.delete(productId));
+
+
+
+    }
 }
