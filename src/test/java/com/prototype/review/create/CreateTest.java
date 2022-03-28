@@ -143,4 +143,36 @@ public class CreateTest {
 
 
     }
+
+    @DisplayName("Create test 4. Abnormal Condition : score over max")
+    @Test
+    public void test4(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        String comment = "comment";
+        int score = 11;
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.existsById(any())).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.create(productId, comment, score));
+
+
+    }
 }
