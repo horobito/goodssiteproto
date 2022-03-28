@@ -130,14 +130,13 @@ public class DeleteTest {
                 false,
                 LocalDate.now());
 
-        Long reviewerId = 2L;
 
         String comment = "comment";
         int maxScore = 10;
         int minScore = 1;
 
         Review review = Review.create(
-                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(maxScore)
+                productId, loggedInUserId, ReviewComment.create(comment), ProductScore.create(maxScore)
         );
         review.delete();
 
