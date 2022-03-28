@@ -100,7 +100,7 @@ public class CreateTest {
         when(reviewRepository.existsById(any())).thenReturn(false);
         when(reviewRepository.save(any())).thenReturn(created);
 
-        sut.create(productId, comment, maxScore);
+        sut.create(productId, comment, minScore);
 
         verify(reviewRepository, times(1)).save(any());
 
