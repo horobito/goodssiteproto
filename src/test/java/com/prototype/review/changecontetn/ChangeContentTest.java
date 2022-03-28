@@ -72,5 +72,82 @@ public class ChangeContentTest {
 
     }
 
-    
+    @DisplayName("ChangeContent test 2. Abnormal Condition : reviewer mismatches user ")
+    @Test
+    public void test2(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        Long reviewerId = 2L;
+
+        String comment = "comment";
+        int score = 10;
+
+        Review review = Review.create(
+                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(score)
+        );
+        String newComment = "newComment";
+        int newScore = 3;
+
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.changeReviewContent(productId, newComment, newScore));
+
+    }
+
+    @DisplayName("ChangeContent test 3. Abnormal Condition : non deleted ")
+    @Test
+    public void test3(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        Long reviewerId = 2L;
+
+        String comment = "comment";
+        int score = 10;
+
+        Review review = Review.create(
+                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(score)
+        );
+
+        assertFalse(review.isDeleted());
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.revive(productId));
+
+    }
 }
