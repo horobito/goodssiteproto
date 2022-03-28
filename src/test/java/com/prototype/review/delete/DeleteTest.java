@@ -108,7 +108,44 @@ public class DeleteTest {
         assertThrows(IllegalArgumentException.class,
         ()->sut.delete(productId));
 
+    }
 
+    @DisplayName("Delete test 3. Abnormal Condition : already deleted ")
+    @Test
+    public void test3(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        Long reviewerId = 2L;
+
+        String comment = "comment";
+        int maxScore = 10;
+        int minScore = 1;
+
+        Review review = Review.create(
+                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(maxScore)
+        );
+        review.delete();
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.delete(productId));
 
     }
 }
