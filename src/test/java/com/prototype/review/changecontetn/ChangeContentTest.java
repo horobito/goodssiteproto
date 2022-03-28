@@ -240,4 +240,44 @@ public class ChangeContentTest {
                 ()->sut.changeReviewContent(productId, newComment, newScore));
 
     }
+
+    @DisplayName("ChangeContent test 6. Abnormal Condition : new score is over max")
+    @Test
+    public void test6(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        String comment = "comment";
+        int score = 10;
+
+        Review review = Review.create(
+                productId, loggedInUserId, ReviewComment.create(comment), ProductScore.create(score)
+        );
+
+        String newComment
+                = "comment";
+        int newScore = 11;
+
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.changeReviewContent(productId, newComment, newScore));
+
+    }
 }
