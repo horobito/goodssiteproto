@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -103,6 +104,43 @@ public class CreateTest {
         sut.create(productId, comment, minScore);
 
         verify(reviewRepository, times(1)).save(any());
+
+    }
+
+    @DisplayName("Create test 3. Abnormal Condition : already review")
+    @Test
+    public void test3(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        String comment = "comment";
+        int maxScore = 10;
+        int minScore = 1;
+
+        Review created = Review.create(
+                productId, loggedInUser.getUserId(), ReviewComment.create(comment), ProductScore.create(maxScore)
+        );
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.existsById(any())).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.create(productId, comment, minScore));
+
 
     }
 }
