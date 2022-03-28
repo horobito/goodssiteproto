@@ -150,4 +150,54 @@ public class ChangeContentTest {
                 ()->sut.changeReviewContent(productId, newComment, newScore));
 
     }
+
+    @DisplayName("ChangeContent test 4. Abnormal Condition : new comment is too long")
+    @Test
+    public void test4(){
+        ReviewService sut = new ReviewService(reviewRepository, userService);
+
+        Long loggedInUserId =1L;
+        String loggedInUserName = "user";
+        String loggedINUserPassword = "password";
+        String loggedInUserGender = "MALE";
+
+        Long productId = 1L;
+
+        UserDto loggedInUser = new UserDto(
+                loggedInUserId,
+                loggedInUserName,
+                loggedINUserPassword,
+                loggedInUserGender,
+                false,
+                LocalDate.now());
+
+        String comment = "comment";
+        int score = 10;
+
+        Review review = Review.create(
+                productId, loggedInUserId, ReviewComment.create(comment), ProductScore.create(score)
+        );
+
+        String newComment
+                = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "*";
+        int newScore = 3;
+
+
+        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
+        when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
+
+        assertThrows(IllegalArgumentException.class,
+                ()->sut.changeReviewContent(productId, newComment, newScore));
+
+    }
 }
