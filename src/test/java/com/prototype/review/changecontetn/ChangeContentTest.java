@@ -112,7 +112,7 @@ public class ChangeContentTest {
 
     }
 
-    @DisplayName("ChangeContent test 3. Abnormal Condition : non deleted ")
+    @DisplayName("ChangeContent test 3. Abnormal Condition : new comment is too short")
     @Test
     public void test3(){
         ReviewService sut = new ReviewService(reviewRepository, userService);
@@ -132,22 +132,22 @@ public class ChangeContentTest {
                 false,
                 LocalDate.now());
 
-        Long reviewerId = 2L;
-
         String comment = "comment";
         int score = 10;
 
         Review review = Review.create(
-                productId, reviewerId, ReviewComment.create(comment), ProductScore.create(score)
+                productId, loggedInUserId, ReviewComment.create(comment), ProductScore.create(score)
         );
 
-        assertFalse(review.isDeleted());
+        String newComment = "";
+        int newScore = 3;
+
 
         when(userService.getLoggedInUser()).thenReturn(loggedInUser);
         when(reviewRepository.findById(any())).thenReturn(Optional.of(review));
 
         assertThrows(IllegalArgumentException.class,
-                ()->sut.revive(productId));
+                ()->sut.changeReviewContent(productId, newComment, newScore));
 
     }
 }
