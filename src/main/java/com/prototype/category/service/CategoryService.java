@@ -85,7 +85,12 @@ public class CategoryService {
         List<CategoryName> newCategoryNames = new ArrayList<>();
 
         Set<String> existedNames =
-                existedCategories.stream().map(it -> it.getCategoryName().showValue()).collect(Collectors.toSet());
+                existedCategories.stream().map(
+                        it->{if (it.isDeleted()){
+                                it.revive();
+                            }
+                            return categoryRepository.save(it);}
+                ).map(it -> it.getCategoryName().showValue()).collect(Collectors.toSet());
 
         inputtedNames.forEach(name -> {
             if (!existedNames.contains(name)) {
