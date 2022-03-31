@@ -19,11 +19,11 @@ public class ProductService {
 
     // manager 영역에서 사용할 것들
 
-    public ProductDto create(String productName, int productPrice, int stock, boolean isStockInfinite) {
+    public ProductDto create(String productName, int productPrice, int stock, boolean isStockInfinite, String imageUrl) {
         UserDto seller = userService.getLoggedInUser();
         Product newProduct = Product.create(
                 ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(seller.getUserId()), Stock.create(stock, isStockInfinite)
+                SellerId.create(seller.getUserId()), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         Product saved = productRepository.save(newProduct);
@@ -52,20 +52,19 @@ public class ProductService {
         return doStrategy(productId, productSetSoldOutStateStrategy);
     }
 
-    public ProductDto update(Long productId, String productName, int productPrice, int amountOfStockChange, boolean isStockInfinite) {
+    public ProductDto update(Long productId, String productName, int productPrice, int amountOfStockChange, boolean isStockInfinite, String newImageUrl) {
         ProductStrategy updateStrategy = product -> {
             product.changeProductName(productName);
             product.changeProductPrice(productPrice);
             product.changeStock(amountOfStockChange);
             product.changeStockInfiniteState(isStockInfinite);
+            product.changeImageUrl(newImageUrl);
         };
         return doStrategy(productId, updateStrategy);
     }
 
     public ProductDto deductStockAmount(Long productId,int deductedAmount) {
-        ProductStrategy stockAmountDeductionStrategy = product -> {
-            product.deductStockAmount(deductedAmount);
-        };
+        ProductStrategy stockAmountDeductionStrategy = product -> product.deductStockAmount(deductedAmount);
         return doStrategy(productId,stockAmountDeductionStrategy );
     }
 
@@ -105,9 +104,16 @@ public class ProductService {
                 product.getStockAmount(),
                 product.isStockInfinite(),
                 product.isSoldOut(),
-                product.isDeleted()
+                product.isDeleted(),
+                product.getImageUrl().showValue(),
+                product.getRegistrationTime()
         );
     }
 
 
+    public void checkProductExistence(Long id) {
+        if (!productRepository.existsById(id)){
+            throw new IllegalArgumentException();
+        }
+    }
 }

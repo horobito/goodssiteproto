@@ -3,6 +3,8 @@ package com.prototype.product.service;
 
 import lombok.Value;
 
+import java.time.LocalDateTime;
+
 @Value
 public class ProductDto {
     Long productId;
@@ -22,5 +24,9 @@ public class ProductDto {
     boolean isSoldOut;
 
     boolean isDeleted;
+
+    String imageUrl;
+
+    LocalDateTime registTime;
 
 }
