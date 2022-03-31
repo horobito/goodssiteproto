@@ -8,6 +8,7 @@ import com.prototype.category_product_relation.domain.CategoryProductRelationStr
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -76,4 +77,28 @@ public class CategoryProductRelationService {
                 ).collect(Collectors.toList());
     }
 
+    public void update(Long productId, List<Long> newCategoryIds) {
+        List<CategoryProductRelation> existingRelations = judgeExistenceOfExistingrelationship(productId, newCategoryIds);
+        List<CategoryProductRelation> newRelations = excludeDuplication(newCategoryIds, productId, existingRelations);
+        relationRepository.saveAll(newRelations);
+    }
+
+
+
+    private List<CategoryProductRelation> judgeExistenceOfExistingrelationship(Long productId, List<Long> newCategoryIds) {
+        List<CategoryProductRelation> relations = relationRepository.findByProductId(productId);
+
+        Set<Long> newIds = new HashSet<>(newCategoryIds);
+
+        return relations.stream().map(existingRelation->{
+            if (newIds.contains(existingRelation.getCategoryId())){
+                if (existingRelation.isDeleted()){
+                    existingRelation.revive();
+                }
+            }else {
+                existingRelation.delete();
+            }
+            return existingRelation;
+        }).filter(it->!it.isDeleted()).collect(Collectors.toList());
+    }
 }
