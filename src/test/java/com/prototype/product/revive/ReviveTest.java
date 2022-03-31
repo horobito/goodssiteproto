@@ -38,6 +38,7 @@ public class ReviveTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -50,7 +51,7 @@ public class ReviveTest {
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
         productHelper.delete();
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
@@ -71,6 +72,7 @@ public class ReviveTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -83,7 +85,7 @@ public class ReviveTest {
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(userService.getLoggedInUser()).thenReturn(userDto);

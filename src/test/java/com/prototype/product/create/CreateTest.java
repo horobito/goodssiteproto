@@ -38,6 +38,7 @@ public class CreateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 2L;
+        String imageUrl = "tempUrl";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -50,13 +51,13 @@ public class CreateTest {
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite),  ImageUrl.create(imageUrl)
         );
 
         when(productRepository.save(any())).thenReturn(productHelper);
         when(userService.getLoggedInUser()).thenReturn(userDto);
 
-        sut.create(productName, productPrice, stock, isStockInfinite);
+        sut.create(productName, productPrice, stock, isStockInfinite, imageUrl);
         verify(productRepository, times(1)).save(any());
 
 
@@ -72,6 +73,8 @@ public class CreateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 2L;
+        String imageUrl = "tempUrl";
+
 
         String productNameHundred
                 =
@@ -89,13 +92,13 @@ public class CreateTest {
 
         ProductHelper productHelper2 = ProductHelper.create(
                 1L, ProductName.create(productNameHundred), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         when(productRepository.save(any())).thenReturn(productHelper2);
         when(userService.getLoggedInUser()).thenReturn(userDto);
 
-        sut.create(productNameHundred, productPrice, stock, isStockInfinite);
+        sut.create(productNameHundred, productPrice, stock, isStockInfinite, imageUrl);
         verify(productRepository, times(1)).save(any());
 
     }
@@ -115,6 +118,7 @@ public class CreateTest {
         int productPrice = 1;
         int stock = 1;
         boolean isStockInfinite = false;
+        String imageUrl = "tempUrl";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -129,7 +133,7 @@ public class CreateTest {
         when(userService.getLoggedInUser()).thenReturn(userDto);
 
         assertThrows(IllegalArgumentException.class,
-                () -> sut.create(productNameUnder, productPrice, stock, isStockInfinite));
+                () -> sut.create(productNameUnder, productPrice, stock, isStockInfinite, imageUrl));
 
 
     }
@@ -144,6 +148,7 @@ public class CreateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 2L;
+        String imageUrl = "tempUrl";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -158,7 +163,7 @@ public class CreateTest {
         when(userService.getLoggedInUser()).thenReturn(userDto);
 
         assertThrows(IllegalArgumentException.class,
-                () -> sut.create(productName, productPrice, stock, isStockInfinite));
+                () -> sut.create(productName, productPrice, stock, isStockInfinite, imageUrl));
     }
 
     @DisplayName("Create Test 4. Abnormal Condition - stock range error ")
@@ -171,6 +176,7 @@ public class CreateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 2L;
+        String imageUrl = "tempUrl";
 
         UserDto userDto = new UserDto(
                 1L,
@@ -185,7 +191,7 @@ public class CreateTest {
         when(userService.getLoggedInUser()).thenReturn(userDto);
 
         assertThrows(IllegalArgumentException.class,
-                () -> sut.create(productName, productPrice, stock, isStockInfinite));
+                () -> sut.create(productName, productPrice, stock, isStockInfinite, imageUrl));
     }
 
 }

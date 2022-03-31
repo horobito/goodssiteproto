@@ -39,10 +39,11 @@ public class ChangeProductPriceTest {
         Long sellerId = 1L;
 
         Long productId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 productId, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -58,12 +59,13 @@ public class ChangeProductPriceTest {
         int newPrice = 0;
         int amountOfStockChange = 0;
         boolean newIsStockInfinite = false;
+        String newImageUrl = "temp";
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
 
-        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite);
+        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite, newImageUrl);
         verify(productRepository, times(1)).save(any());
     }
 
@@ -79,10 +81,11 @@ public class ChangeProductPriceTest {
         Long sellerId = 1L;
 
         Long productId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 productId, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -98,12 +101,13 @@ public class ChangeProductPriceTest {
         int newPrice = 2;
         int amountOfStockChange = 1;
         boolean newIsStockInfinite = false;
+        String newImageUrl = "temp";
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         when(productRepository.save(any())).thenReturn(productHelper);
 
-        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite);
+        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite, newImageUrl);
         verify(productRepository, times(1)).save(any());
     }
 
@@ -119,6 +123,7 @@ public class ChangeProductPriceTest {
         Long sellerId = 1L;
 
         Long productId = 1L;
+        String imageUrl = "temp";
 
         UserDto userDto = new UserDto(
                 sellerId,
@@ -133,16 +138,17 @@ public class ChangeProductPriceTest {
         int newPrice = -1;
         int amountOfStockChange = stock+1;
         boolean newIsStockInfinite = false;
+        String newImageUrl = "temp";
 
 
         ProductHelper productHelper = ProductHelper.create(
                 productId, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         when(userService.getLoggedInUser()).thenReturn(userDto);
         when(productRepository.findById(any())).thenReturn(Optional.of(productHelper));
         assertThrows(IllegalArgumentException.class,
-                ()->        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite));
+                ()->        sut.update(1L, newName, newPrice, amountOfStockChange, newIsStockInfinite, newImageUrl));
     }
 }

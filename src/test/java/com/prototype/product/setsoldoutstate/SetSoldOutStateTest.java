@@ -40,10 +40,11 @@ public class SetSoldOutStateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -73,10 +74,11 @@ public class SetSoldOutStateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
         UserDto userDto = new UserDto(
                 1L,
@@ -107,10 +109,11 @@ public class SetSoldOutStateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -138,10 +141,11 @@ public class SetSoldOutStateTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long userId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(userId), Stock.create(stock, isStockInfinite)
+                SellerId.create(userId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
