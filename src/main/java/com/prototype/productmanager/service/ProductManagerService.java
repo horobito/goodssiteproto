@@ -29,10 +29,10 @@ public class ProductManagerService {
     @Transactional
     public EssentialProductInfo createProduct(
             String productName, int productPrice,
-            int stock, boolean isStockInfinite, List<String> categorieNames){
+            int stock, boolean isStockInfinite, List<String> categoryNames, String imageUrl){
 
-        ProductDto productDto = productService.create(productName, productPrice, stock, isStockInfinite);
-        List<CategoryDto> categoryDtos = categoryService.createCategories(categorieNames);
+        ProductDto productDto = productService.create(productName, productPrice, stock, isStockInfinite, imageUrl);
+        List<CategoryDto> categoryDtos = categoryService.createCategories(categoryNames);
         relationService.createRelations(
                 categoryDtos.stream().map(it->it.getCategoryId()).collect(Collectors.toList()),
                 productDto.getProductId());
@@ -54,11 +54,12 @@ public class ProductManagerService {
 
     @Transactional
     public EssentialProductInfo changeProductInfo(
-            Long productId, String productName, int productPrice,
-            int amountOfChange, boolean isStockInfinite){
-        ProductDto updatedProduct = productService.update(productId, productName, productPrice, amountOfChange, isStockInfinite);
-        List<CategoryDto> relatedCategory = categoryService.getRelatedCategory(productId);
-        return getEssentialProductDto(updatedProduct, relatedCategory);
+            Long productId,  String productName, int productPrice,
+            int amountOfChange, boolean isStockInfinite,List<String> categoryNames, String imageUrl){
+        ProductDto updatedProduct = productService.update(productId, productName, productPrice, amountOfChange, isStockInfinite, imageUrl);
+        List<CategoryDto> newCategories = categoryService.createCategories(categoryNames);
+        relationService.update(productId, newCategories.stream().map(CategoryDto::getCategoryId).collect(Collectors.toList()));
+        return getEssentialProductDto(updatedProduct, newCategories);
     }
 
 
@@ -71,7 +72,8 @@ public class ProductManagerService {
                 productDto.getSellerName(),
                 productDto.getProductPrice(),
                 productDto.isSoldOut(),
-                categoryDtos
+                categoryDtos,
+                productDto.getImageUrl()
         );
     }
 
