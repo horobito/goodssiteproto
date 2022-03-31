@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/productdetails.css}"/>
+    <title th:text="${productDetails.productName}"></title>
+</head>
+<body>
+
+<header>
+    <div class="container">
+
+        <a href="/main">
+            <selection class="logo">
+                    <span class="idol_logo">
+                        <img th:src="@{img/hoshi_star.png}"
+                             style="max-width: 27px; max-height: 27px; object-fit: cover;">
+                    </span>
+                <span>
+                        <strong class="name">Sui chan's</strong>
+                        goods shop
+                        <span class="points"></span>
+                    </span>
+            </selection>
+        </a>
+
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="https://cover-corp.com/" target="_blank">Cover Corperation</a>
+                </li>
+                <li>
+                    <a href="https://hololive.hololivepro.com/" target="_blank">Hololive Production</a>
+                </li>
+
+                <li class="menu-icon" id="hamburguer-icon">
+                    <div class="top"></div>
+                    <div class="middle"></div>
+                    <div class="bottom"></div>
+                </li>
+            </ul>
+        </nav>
+
+
+    </div>
+</header>
+
+<section class="product-details">
+    <h1> Product Details</h1>
+    <hr class="upper">
+    <section class="product-infos">
+        <section class="product-images">
+            <section class="product-image">
+                <img th:src="@{${productDetails.getImageUrl()}}">
+            </section>
+        </section>
+        <section class="product-description">
+            <h3 class="seller" th:text="'판매자 : ' + ${productDetails.sellerName}"></h3>
+            <hr>
+            <h2 class="title" th:text="${productDetails.getProductName()}"/>
+            <h3 class="score" th:text="${productDetails.getAverageScore()}+'/10'" +></h3>
+            <h3 class="price" th:text="${productDetails.getProductPrice()} + '원'"></h3>
+        </section>
+    </section>
+
+</section>
+
+
+<section class="reviews">
+    <div class="container">
+
+        <h2> Reviews </h2>
+        <hr class="upper">
+
+        <div class="review" th:each="review : ${reviews}">
+            <div class="score">
+                <a th:text="${review.getScore()} + '/10'"></a>
+            </div>
+            <div class="comment">
+                <a th:text="${review.getReviewComment()}"></a>
+            </div>
+            <div class="sub-info">
+                <a th:text="'작성자 : ' + ${review.getReviewerName()}"></a>
+                <br>
+                <a th:text="'등록일 : ' + ${review.getRegistrationDate()}"></a>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="botton-nav">
+
+        <div class="container">
+            <ul>
+                <li class="list-title">Official Site</li>
+                <li><a href="https://cover-corp.com/" target="_blank">COVER Corporation</a></li>
+                <li><a href="https://hololive.hololivepro.com/" target="_blank">Hololive Production</a></li>
+                <li><a href="https://en.hololive.tv/goods" target="_blank">Official Goods</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories2</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories3</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories4</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="copyright-text">
+        Copyrightⓒ<span id="current-year"></span> &nbsp COVER Corp. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
