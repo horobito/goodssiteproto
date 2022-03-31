@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.Tuple;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,8 +49,12 @@ public class ReviewService {
     }
 
 
-    public List<ReviewDto> getProductReviews(Long productId, LocalDateTime cursor, int size){
-        return convertToReviewDto(reviewRepository.findProductReview(productId,cursor, size));
+    public List<ReviewDto> getProductReviews(Long productId, Long cursor, int size){
+        if (cursor==0){
+            return convertToReviewDto(reviewRepository.findProductReview(productId, size));
+        }else {
+            return convertToReviewDto(reviewRepository.findProductReviews(productId, cursor, size));
+        }
     }
 
 

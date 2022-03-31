@@ -58,7 +58,8 @@ public class IntegrationDeleteTest {
                 expected.getStockAmount(),
                 expected.isStockInfinite(),
                 expected.isSoldOut(),
-                true
+                true,
+                expected.getImageUrl().showValue()
         );
 
 

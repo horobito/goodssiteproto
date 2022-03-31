@@ -41,11 +41,12 @@ public class DeleteTest {
         Long userId = 1L;
 
         Long productId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 productId, ProductName.create(productName),
                 ProductPrice.create(productPrice), SellerId.create(userId),
-                Stock.create(stock, isStockInfinite)
+                Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
 
@@ -79,11 +80,12 @@ public class DeleteTest {
         Long userId = 1L;
 
         Long productId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 productId, ProductName.create(productName),
                 ProductPrice.create(productPrice), SellerId.create(userId),
-                Stock.create(stock, isStockInfinite)
+                Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
         productHelper.delete();
 

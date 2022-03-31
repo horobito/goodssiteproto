@@ -37,10 +37,11 @@ public class DeductProductStockAmountTest {
         int stock = 2;
         boolean isStockInfinite = false;
         Long sellerId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -72,10 +73,11 @@ public class DeductProductStockAmountTest {
         int stock = 2;
         boolean isStockInfinite = false;
         Long sellerId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         UserDto userDto = new UserDto(
@@ -107,10 +109,11 @@ public class DeductProductStockAmountTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long sellerId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         int deductedAmount = 0;
@@ -143,10 +146,11 @@ public class DeductProductStockAmountTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long sellerId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         int deductedAmount = -1;
@@ -177,10 +181,11 @@ public class DeductProductStockAmountTest {
         int stock = 1;
         boolean isStockInfinite = false;
         Long sellerId = 1L;
+        String imageUrl = "temp";
 
         ProductHelper productHelper = ProductHelper.create(
                 1L, ProductName.create(productName), ProductPrice.create(productPrice),
-                SellerId.create(sellerId), Stock.create(stock, isStockInfinite)
+                SellerId.create(sellerId), Stock.create(stock, isStockInfinite), ImageUrl.create(imageUrl)
         );
 
         int deductedAmount = stock+2;

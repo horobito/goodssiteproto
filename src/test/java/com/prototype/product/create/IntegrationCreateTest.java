@@ -46,6 +46,7 @@ public class IntegrationCreateTest {
         int productPrice = 100;
         int stock = 10;
         boolean isStockInfinite = false;
+        String imageUrl = "temp";
 
         Long expectedProductId = 1L;
         Long expectedSellerId = loggedInUser.getUserId();
@@ -62,14 +63,15 @@ public class IntegrationCreateTest {
                 stock,
                 false,
                 false,
-                false
+                false,
+                imageUrl
 
         );
 
 
         when(userService.getLoggedInUser()).thenReturn(loggedInUser);
 
-        ProductDto created= sut.create(productName, productPrice, stock, isStockInfinite);
+        ProductDto created= sut.create(productName, productPrice, stock, isStockInfinite, imageUrl);
 
         assertEquals(expected.getProductId(), created.getProductId());
         assertEquals(expected.getProductName(), created.getProductName());

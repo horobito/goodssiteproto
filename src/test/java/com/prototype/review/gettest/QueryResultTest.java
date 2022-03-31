@@ -34,13 +34,13 @@ public class QueryResultTest {
         LocalDateTime time = LocalDateTime.parse(
                 "2022-03-27 12:47:43.121", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 
-        List<ReviewDto> result = sut.getProductReviews(
-                1L, LocalDateTime.parse(
-                        "2022-03-27 22:47:43.000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                        ), 5
-        );
-
-        System.out.println(result.toString());
+//        List<ReviewDto> result = sut.getProductReviews(
+//                1L, LocalDateTime.parse(
+//                        "2022-03-27 22:47:43.000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+//                        ), 5
+//        );
+//
+//        System.out.println(result.toString());
     }
 
     @Test
@@ -56,4 +56,23 @@ public class QueryResultTest {
         System.out.println(all.toString());
     }
 
+
+    @Test
+    public void test3(){
+        ReviewService sut  = new ReviewService(reviewRepository, userService);
+
+
+
+
+        LocalDateTime time = LocalDateTime.parse(
+                "2022-03-27 12:47:43.121", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+
+//        List<ReviewDto> result = sut.getProductReviews(
+//                1L, LocalDateTime.parse(
+//                        "2022-03-27 22:47:43.000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+//                ), 5
+//        );
+
+//        System.out.println(result.toString());
+    }
 }

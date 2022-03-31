@@ -21,4 +21,6 @@ public class EssentialProductInfo {
 
     List<CategoryDto> categoryDtos;
 
+    String imageUrl;
+
 }
