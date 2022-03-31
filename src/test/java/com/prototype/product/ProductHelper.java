@@ -26,15 +26,19 @@ public class ProductHelper extends Product {
 
     private boolean isDeleted;
 
+    @Embedded
+    private ImageUrl imageUrl;
+
     public ProductHelper(ProductName productName,
                          ProductPrice productPrice, SellerId sellerId,
-                         Stock stock) {
+                         Stock stock, ImageUrl imageUrl) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.sellerId = sellerId;
         this.stock = stock;
         this.isSoldOut = false;
         this.isDeleted = false;
+        this.imageUrl = imageUrl;
 
     }
 
@@ -42,13 +46,14 @@ public class ProductHelper extends Product {
             Long id,
             ProductName productName,
             ProductPrice productPrice, SellerId sellerId,
-            Stock stock
+            Stock stock, ImageUrl imageUrl
     ) {
         ProductHelper product = new ProductHelper(
                 productName,
                 productPrice,
                 sellerId,
-                stock
+                stock,
+                imageUrl
         );
 
         product.setId(id);
@@ -68,6 +73,10 @@ public class ProductHelper extends Product {
         if (!this.stock.isStockInfinite()) {
             this.stock = Stock.create(changedStock, this.stock.isStockInfinite());
         }
+    }
+
+    public void changeImageUrl(String newImageUrl){
+        this.imageUrl = ImageUrl.create(newImageUrl);
     }
 
     public void changeStockInfiniteState(boolean isStockInfinite){
@@ -115,6 +124,10 @@ public class ProductHelper extends Product {
             throw new IllegalArgumentException();
         }
         this.stock = Stock.create(this.stock.getRemainingStocks()-deductedAmount, this.isStockInfinite());
+    }
+
+    public ImageUrl getImageUrl() {
+        return imageUrl;
     }
 
     public Long getProductId() {
