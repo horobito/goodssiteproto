@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -26,6 +27,12 @@ public class Product {
     @Embedded
     private Stock stock;
 
+    @Embedded
+    private ImageUrl imageUrl;
+
+    private LocalDateTime registrationTime;
+
+
     private boolean isSoldOut;
 
     private boolean isDeleted;
@@ -33,19 +40,21 @@ public class Product {
 
     private Product(ProductName productName,
                     ProductPrice productPrice, SellerId sellerId,
-                    Stock stock) {
+                    Stock stock, ImageUrl imageUrl) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.sellerId = sellerId;
         this.stock = stock;
         this.isSoldOut = false;
         this.isDeleted = false;
+        this.registrationTime = LocalDateTime.now();
+        this.imageUrl = imageUrl;
     }
 
     public static Product create(ProductName productName,
                                  ProductPrice productPrice, SellerId sellerId,
-                                 Stock stock) {
-        return new Product(productName, productPrice, sellerId, stock);
+                                 Stock stock, ImageUrl imageUrl) {
+        return new Product(productName, productPrice, sellerId, stock, imageUrl);
     }
 
 
@@ -71,12 +80,17 @@ public class Product {
         }
     }
 
+    public void changeImageUrl(String newImageUrl){
+        this.imageUrl = ImageUrl.create(newImageUrl);
+    }
+
     public void setSoldOut() {
         if (this.isSoldOut) {
             throw new IllegalArgumentException();
         }
         this.isSoldOut = true;
     }
+
 
     public void setUnSoldOut() {
         if (!this.isSoldOut) {
@@ -106,6 +120,9 @@ public class Product {
         this.stock = Stock.create(this.stock.getRemainingStocks()-deductedAmount, this.isStockInfinite());
     }
 
+    public ImageUrl getImageUrl() {
+        return imageUrl;
+    }
 
     public Long getProductId() {
         return productId;
