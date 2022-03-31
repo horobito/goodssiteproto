@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/newproducts.css}" />
+    <title>New Products</title>
+</head>
+<body>
+
+<header>
+    <div class="container">
+
+        <a href="/main">
+            <selection class="logo">
+                    <span class="idol_logo">
+                        <img th:src="@{img/hoshi_star.png}"
+                             style="max-width: 27px; max-height: 27px; object-fit: cover;">
+                    </span>
+                <span>
+                        <strong class="name">Sui chan's</strong>
+                        goods shop
+                        <span class="points"></span>
+                    </span>
+            </selection>
+        </a>
+
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="https://cover-corp.com/" target="_blank">Cover Corperation</a>
+                </li>
+                <li>
+                    <a href="https://hololive.hololivepro.com/" target="_blank">Hololive Production</a>
+                </li>
+
+                <li class="menu-icon" id="hamburguer-icon">
+                    <div class="top"></div>
+                    <div class="middle"></div>
+                    <div class="bottom"></div>
+                </li>
+            </ul>
+        </nav>
+
+
+
+    </div>
+</header>
+
+<!--<section class="hero">-->
+<!--    <picture>-->
+<!--        <img th:src="@{img/suisei_background_large.png}">-->
+<!--    </picture>-->
+
+<!--    <div class="hero-content">-->
+<!--        <div class="container">-->
+<!--            <h1>"It's your shooting star,-->
+<!--                <br> your diamond in the rough.-->
+<!--                <br> Idol VTuber Hoshimachi Suisei!"-->
+<!--            </h1>-->
+<!--            <p>Hoshimachi Suisei(星街すいせい) is a-->
+<!--                <br> cheerful shining Idol and VTuber-->
+<!--                <br> from Hololive 0th Generation.-->
+<!--                <br><br> She is a forever 18, multitalented girl-->
+<!--                <br> who deeply loves singing and idols,-->
+<!--                <br> with the dream of one-->
+<!--                day holding a live concert-->
+<!--                <br> in Tokyo Budokan.-->
+<!--            </p>-->
+
+<!--            <button>-->
+<!--                <a href="https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A" target="_blank">Go to suisei-->
+<!--                    channel</a>-->
+<!--            </button>-->
+
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+
+<section class="new-product" id="new-product-section">
+    <h2> New Product</h2>
+    <hr>
+    <div class="product-slider">
+        <div class="container" >
+            <div class="product" th:each="productInfo : ${newProducts}">
+                <div class="product-picture">
+                    <img th:src="@{${productInfo.getImageUrl()}}">
+                </div>
+                <div class="product-info">
+                    <h5 class="categories" th:each="category : ${productInfo.getCategories()}">
+                        <p class="category" th:text="${category.getCategoryName().subSequence(0, 6)}"></p>
+                    </h5>
+                    <h4 class="title" th:text="${productInfo.getProductName()}"/>
+                    <h3 class="score" th:text="${productInfo.getAverageScore()}+'/10'" +  ></h3>
+                    <h3 class="price" th:text="${productInfo.getProductPrice()}"></h3>
+                    <button>
+                        <a th:method="GET"
+                           th:href="@{'/products/' + ${productInfo.getProductId()} + '/reviews/'
+                           + ${0}+'/' + ${10}}" target="_blank">
+
+                            view product details
+                        </a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+<footer>
+    <div class="botton-nav">
+
+        <div class="container">
+            <ul>
+                <li class="list-title">Official Site</li>
+                <li><a href="https://cover-corp.com/" target="_blank">COVER Corporation</a></li>
+                <li><a href="https://hololive.hololivepro.com/" target="_blank">Hololive Production</a></li>
+                <li><a href="https://en.hololive.tv/goods" target="_blank">Official Goods</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories2</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories3</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+
+            <ul>
+                <li class="list-title">Categories4</li>
+                <li><a href="#">temp1</a></li>
+                <li><a href="#">temp2</a></li>
+                <li><a href="#">temp3</a></li>
+                <li><a href="#">temp4</a></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="copyright-text">
+        Copyrightⓒ<span id="current-year"></span> &nbsp COVER Corp. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
