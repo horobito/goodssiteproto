@@ -24,15 +24,19 @@
 
 - 개발 전체을 맡았습니다.
 
+
+### 세부 기능
+- 
+
 ### 구현
 
 - Front 부분
     - main
-    - ![main](https://user-images.githubusercontent.com/62026666/161501223-229918ba-fa6e-45ba-80d6-08b32565e9ca.png)
+     ![main](https://user-images.githubusercontent.com/62026666/161501223-229918ba-fa6e-45ba-80d6-08b32565e9ca.png)
     - new products
-    - ![newproducts](https://user-images.githubusercontent.com/62026666/161501305-9673f2be-4916-4fac-9931-b90ddf7f1cb3.png)
+     ![newproducts](https://user-images.githubusercontent.com/62026666/161501305-9673f2be-4916-4fac-9931-b90ddf7f1cb3.png)
     - product details
-    - ![productdetails](https://user-images.githubusercontent.com/62026666/161501483-bb34ef7c-0b41-4650-97fe-8da3fedb024f.png)
+     ![productdetails](https://user-images.githubusercontent.com/62026666/161501483-bb34ef7c-0b41-4650-97fe-8da3fedb024f.png)
 
 
 
